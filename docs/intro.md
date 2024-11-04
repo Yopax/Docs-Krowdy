@@ -4,44 +4,25 @@ sidebar_position: 1
 
 # Introducción
 
-Let's discover **Docusaurus in less than 5 minutes**.
+Esta documentación detalla el proceso de aprendizaje y desarrollo en el "Programa de formación y reclutamiento para desarrolladores Jr.". A lo largo de esta documentación, se presentarán los fundamentos del scraping, el uso de herramientas y bibliotecas populares, así como el papel esencial de Chrome DevTools y Chrome Extension en la inspección de elementos web y en la identificación de patrones de datos.
 
-## Getting Started
+El objetivo de este proyecto es construir un conocimiento práctico y teórico, Organizada en cinco semanas, cada fase del programa se centra en un área clave: Scraping y Chrome DevTools (Semana 1), Chrome Extensions y Puppeteer (Semana 2), React (Semana 3), Node.js (Semana 4) y un Proyecto Final (Semana 5). Este enfoque progresivo brinda una base sólida en scraping, desarrollo web y automatización, orientada a construir aplicaciones prácticas y preparar un proyecto integral al final del programa.
 
-Get started by **creating a new site**.
+### Programa y fases
 
-Or **try Docusaurus immediately** with **[docusaurus.new](https://docusaurus.new)**.
+- Semana 1:
+  - Scrapping y Chrome DevTools.
+- Semana 2:
+  - Chrome Extensions y Puppeteer.
+- Semana 3:
+  - React.
+- Semana 4:
+  - Node.js.
+- Semana 5:
+  - Proyecto final - definición de los finalistas.
+  
+### Tecnologías a formar y evaluar
 
-### What you'll need
-
-- [Node.js](https://nodejs.org/en/download/) version 18.0 or above:
-  - When installing Node.js, you are recommended to check all checkboxes related to dependencies.
-
-## Generate a new site
-
-Generate a new Docusaurus site using the **classic template**.
-
-The classic template will automatically be added to your project after you run the command:
-
-```bash
-npm init docusaurus@latest my-website classic
-```
-
-You can type this command into Command Prompt, Powershell, Terminal, or any other integrated terminal of your code editor.
-
-The command also installs all necessary dependencies you need to run Docusaurus.
-
-## Start your site
-
-Run the development server:
-
-```bash
-cd my-website
-npm run start
-```
-
-The `cd` command changes the directory you're working with. In order to work with your newly created Docusaurus site, you'll need to navigate the terminal there.
-
-The `npm run start` command builds your website locally and serves it through a development server, ready for you to view at http://localhost:3000/.
-
-Open `docs/intro.md` (this page) and edit some lines: the site **reloads automatically** and displays your changes.
+- JavaScript
+- React
+- Node.js

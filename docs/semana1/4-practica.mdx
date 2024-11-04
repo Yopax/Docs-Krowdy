@@ -3,150 +3,277 @@ sidebar_position: 4
 ---
 
 # Ejercicio Práctico
+`Ejercicio Propuesto:`
+Realizar una Chrome extensión que permita realizar scraping de información de productos(Verduras y Frutas) en la página web de **[Plaza Vea](https://www.plazavea.com.pe/frutas-y-verduras)**. 
+## Estructura del Carpetas
 
-Docusaurus supports **[Markdown](https://daringfireball.net/projects/markdown/syntax)** and a few **additional features**.
+Este documento describe la estructura de carpetas y archivos para el proyecto de la extensión de Chrome "VEA-SCRAPER-DARLI". Cada carpeta y archivo tiene un propósito específico para la funcionalidad y configuración de la extensión. [Front Matter](https://jekyllrb.com/docs/front-matter/):
 
-## Front Matter
-
-Markdown documents have metadata at the top called [Front Matter](https://jekyllrb.com/docs/front-matter/):
-
-```text title="my-doc.md"
-// highlight-start
----
-id: my-doc-id
-title: My document title
-description: My document description
-slug: /my-custom-url
----
-// highlight-end
-
-## Markdown heading
-
-Markdown text with [links](./hello.md)
+```plaintext
+📂 VEA-SCRAPER-DARLI
+├── 📂 dist                     
+├── 📂 node_modules            
+├── 📂 src                      
+│   ├── background.js         
+│   ├── content.js              
+│   └── popup.js                
+├── 📂 static                  
+│   ├── icon1.svg           
+│   ├── logo.png                
+│   ├── manifest.json         
+│   ├── popup.css              
+│   └── popup.html                               
+├── package-lock.json           
+├── package.json                
+├── README.md                   
+├── webpack.common.js           
+├── webpack.dev.js              
+└── webpack.prod.js                  
 ```
-
-## Links
-
+### dist
+Carpeta que contiene los archivos finales generados para la distribución de la extensión. Webpack compila el código aquí para que esté listo para la producción.
 Regular Markdown links are supported, using url paths or relative file paths.
+### node_modules
+Carpeta que contiene todas las dependencias y módulos instalados mediante npm. Estos módulos son necesarios para que el proyecto funcione correctamente.
+### src
+Contiene el código fuente de la extensión. Incluye los scripts principales que manejan la lógica de fondo, la interacción con la página y la interfaz de usuario del popup.
+- background.js: Script que se ejecuta en segundo plano para manejar tareas persistentes, como escuchar eventos y comunicar la extensión con las páginas web.
+- content.js: Script de contenido que se inyecta en la página web y contiene la lógica de scraping para interactuar con el DOM de la página.
+- popup.js: Script que maneja la lógica y funcionalidad del popup de la extensión, incluyendo botones y eventos.
+### static
+Carpeta que contiene archivos estáticos, como íconos y el archivo de configuración de la extensión, así como los archivos para el popup.
 
-```md
-Let's see how to [Create a page](/create-a-page).
+- icon1.svg: Icono en formato SVG utilizado para representar la extensión en la barra de Chrome y en la tienda de Chrome.
+- logo.png: Imagen en formato PNG que sirve como logo de la extensión.
+- manifest.json: Archivo de configuración principal de la extensión que define permisos, scripts, íconos, etc.
+- popup.css: Archivo CSS que define los estilos visuales para la interfaz del popup.
+- popup.html: Archivo HTML que estructura la interfaz del popup mostrado al usuario.
+### package-lock.json
+Archivo de bloqueo que garantiza la integridad de versiones de las dependencias instaladas. Es generado automáticamente por npm.
+### package.json
+Archivo de configuración para npm. Define las dependencias del proyecto, scripts útiles para el desarrollo, y metadatos básicos del proyecto.
+### README.md
+Archivo de documentación general del proyecto. Incluye una introducción al proyecto, instrucciones de instalación y uso, y cualquier otra información relevante para los desarrolladores y usuarios.
+### webpack.common.js
+Configuración común de Webpack que incluye reglas y plugins que se aplican tanto en el entorno de desarrollo como en producción.
+### webpack.dev.js
+Configuración de Webpack específica para el entorno de desarrollo. Incluye ajustes como el modo development y el uso de herramientas para debugging.
+### webpack.prod.js
+Configuración de Webpack para el entorno de producción. Incluye optimizaciones y ajustes como el modo production para mejorar el rendimiento y reducir el tamaño de los archivos generados.
+
+## Manifest
+```jsx title="/static/manifest.json"
+{
+    "name": "Scraper Vea 2",
+    "description": "This extension will scrape the plaza vea website",
+    "version": "1.1",
+    "manifest_version": 3,
+    "content_scripts": [
+      {
+        "matches": ["https://www.plazavea.com.pe/*"],
+        "js": ["content.js"]
+      }
+    ],
+    "action":{
+      "default_popup": "popup.html",
+      "default_icon": "logo.png"
+    },
+    "permissions": ["activeTab", "scripting"]
+  }
 ```
-
-```md
-Let's see how to [Create a page](./create-a-page.md).
+En este archivo JSON, se describen los atributos capacidades y configuración. Por ejemplo, la mayoría de los archivos de manifiesto contienen una clave "action" que declara la imagen que Chrome debe usar como ícono de acción de la extensión y la página HTML para mostrar en una ventana emergente cuando cuando se hace clic en el ícono de acción de la extensión.
+## HTML
+El archivo popup.html es la estructura de la extension la ui que se mostrara alos usuarios, en este documento tambiem definimos los estilos mediante clases(class="") creados en el popup.css. Asimismo definimos la logica de los botones o inputs mediante ids(id=""). 
+```jsx title="static/popup.html"
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scraper Vea</title>
+    <link rel="stylesheet" type="text/css" href="popup.css">
+</head>
+<body>
+    <!-- Header(img logo - title extension)-->
+    <div class="divheader">
+        <img src="logo.png" alt="logo">
+        <div>
+            <h2 class="titleextension">SCRAPER VEA</h2>
+            <a class="autor" href="https://speed-silk.vercel.app/" target="_blank">By: Darli Barreto</a>
+        </div>
+    </div>
+    <!-- Disclaimer(icon - description discleaimer)-->
+    <div class="divdisclaimer">
+        <img src="icon1.svg" alt="icon disclaimer">
+        <h2 class="descriptdiscleimer">Extensión creada con fines educativos para demostrar técnicas de scraping web.
+        </h2>
+    </div>
+    <div class="divinputdata">
+        <p class="descriptinputdata">Nombre del Archivo</p>
+        <input class="inputdata" id="filenameInput" placeholder="Nombre del archivo para guardar los datos."
+            type="text">
+        <p class="recordatorioinputdata">Sus datos scrapeados se guardaran en formato .JSON</p>
+    </div>
+    <div class="divbuttons">
+        <button class="playbutton" id="scrapeButton">Iniciar Scraping</button>
+        <button class="downloadbutton" id="downloadButton">Descargar JSON</button>
+    </div>
+    <div class="feedback" id="feedback"></div>
+    <div class="output" id="output"></div>
+    <script src="popup.js"></script>
+</body>
+</html>
 ```
+## JavaScript
+Este código realiza scraping en una página activa de Chrome, extrae y muestra datos de productos en la interfaz de la extensión y permite descargarlos en JSON.
 
-**Result:** Let's see how to [Create a page](./create-a-page.md).
-
-## Images
-
-Regular Markdown images are supported.
-
-You can use absolute paths to reference images in the static directory (`static/img/docusaurus.png`):
-
-```md
-![Docusaurus logo](/img/docusaurus.png)
-```
-
-![Docusaurus logo](/img/docusaurus.png)
-
-You can reference images relative to the current file as well. This is particularly useful to colocate images close to the Markdown files using them:
-
-```md
-![Docusaurus logo](./img/docusaurus.png)
-```
-
-## Code Blocks
-
-Markdown code blocks are supported with Syntax highlighting.
-
-````md
-```jsx title="src/components/HelloDocusaurus.js"
-function HelloDocusaurus() {
-  return <h1>Hello, Docusaurus!</h1>;
+### Lógica del botón: Iniciar Scraping
+Todo comienza con este bloque de código que escucha el evento de "click" en scrapeButton y ejecuta una función anónima asíncrona.
+```jsx title="src/popup.js"
+document.getElementById("scrapeButton").addEventListener("click", async () => {
+  .....
 }
 ```
-````
-
-```jsx title="src/components/HelloDocusaurus.js"
-function HelloDocusaurus() {
-  return <h1>Hello, Docusaurus!</h1>;
+Obtiene referencias a los elementos feedback y output para actualizar mensajes y mostrar resultados.
+```jsx title="src/popup.js"
+const feedback = document.getElementById("feedback");
+const output = document.getElementById("output");
+```
+Muestra "Realizando scraping..." para indicar que el proceso ha comenzado.
+Limpia el contenido de output para asegurarse de que no queden resultados anteriores.
+```jsx title="src/popup.js"
+feedback.textContent = "Realizando scraping...";
+output.innerHTML = "";
+```
+Usa la API chrome.tabs.query para obtener la pestaña activa en la ventana actual y guarda la información en tab.
+```jsx title="src/popup.js"
+const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+```
+Utiliza chrome.scripting.executeScript para ejecutar la función scrapeProducts en la pestaña actual.
+results contiene el resultado del scraping.
+```jsx title="src/popup.js"
+chrome.scripting.executeScript(
+  {
+    target: { tabId: tab.id },
+    func: scrapeProducts,
+  },
+  (results) => { ... }
+);
+```
+Extrae los datos de los productos de results[0].result.
+Si no se encontraron productos, muestra un mensaje y oculta el botón de descarga.
+Si se encuentran productos, muestra el mensaje "Scraping completado", genera el HTML para cada producto y lo agrega a output.
+```jsx title="src/popup.js"
+const data = results[0].result;
+if (data.length === 0) { ... } else { ... }
+```
+Muestra el botón de descarga y le asigna un evento onclick para que descargue los datos en formato JSON.
+```jsx title="src/popup.js"
+document.getElementById("downloadButton").style.display = "inline";
+document.getElementById("downloadButton").onclick = () => downloadJSON(data);
+```
+### Lógica del scraping: scrapeProducts
+Esta función es la encargada de realizar el scraping en la página activa y extraer los datos de los productos.
+```jsx title="src/popup.js"
+async function scrapeProducts() {
+```
+dentro de la funcion anterior se define una función delay que devuelve una promesa resuelta después de time milisegundos.
+```jsx title="src/popup.js"
+function delay(time) {
+  return new Promise((resolve) => setTimeout(resolve, time));
 }
 ```
+Espera 200 ms para dar tiempo a que el contenido de la página se cargue completamente.
+```jsx title="src/popup.js"
+await delay(200);
+```
+Usa un selector para obtener todos los elementos de las tarjetas de productos (cards).
+Convierte NodeList en un array para facilitar su manipulación.
+```jsx title="src/popup.js"
+let cards = document.querySelectorAll("div.showcase-grid>div> .Showcase__content");
+cards = [...cards];
+```
+Recorre cada tarjeta y extrae los detalles del producto:
+name: Nombre del producto.
+sellerName: Nombre del vendedor.
+salePrice: Precio de venta.
+salePriceDes: Precio con descuento.
+priceTag: Etiqueta de precio (porcentaje de descuento).
+Si un valor no se encuentra, se asigna un texto por defecto, como "Nombre no encontrado".
+```jsx title="src/popup.js"
+const products = cards.map((el) => { ... });
+```
+Retorna el array products con los detalles de cada producto encontrado.
+```jsx title="src/popup.js"
+return products;
+```
+### Lógica del botón de descarga: downloadJSON
+Esta función permite descargar los datos extraídos en un archivo JSON con el nombre especificado por el usuario.
+```jsx title="src/popup.js"
+function downloadJSON(data) {
+```
+dentro de la funcion anterior se obtiene el nombre del archivo desde filenameInput. Si no se ingresa un nombre, usa "testdarli" como predeterminado.
+```jsx title="src/popup.js"
+const filenameInput = document.getElementById("filenameInput");
+const filename = filenameInput.value.trim() || "testdarli";
+```
+Crea un Blob con los datos en formato JSON.
+Genera una URL para el Blob y simula un clic en un enlace a para descargar el archivo.
+Usa URL.revokeObjectURL para liberar memoria después de la descarga.
+```jsx title="src/popup.js"
+const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+const url = URL.createObjectURL(blob);
+const a = document.createElement("a");
+a.href = url;
+a.download = `${filename}.json`;
+a.click();
+URL.revokeObjectURL(url);
+```
+### Codigo Completo
 
-## Admonitions
+```jsx title="src/popup.js"
+document.getElementById("scrapeButton").addEventListener("click", async () => {
+  const feedback = document.getElementById("feedback");
+  const output = document.getElementById("output");
 
-Docusaurus has a special syntax to create admonitions and callouts:
+  feedback.textContent = "Realizando scraping...";
+  output.innerHTML = "";
 
-```md
-:::tip My tip
-
-Use this awesome feature option
-
-:::
-
-:::danger Take care
-
-This action is dangerous
-
-:::
+  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+  chrome.scripting.executeScript(
+    {
+      target: { tabId: tab.id },
+      func: scrapeProducts,
+    },
+    (results) => {
+      const data = results[0].result;
+      if (data.length === 0) {
+        feedback.textContent = "No se encontraron productos.";
+        document.getElementById("downloadButton").style.display = "none";
+      } else {
+        feedback.textContent = "Scraping completado.";
+        output.innerHTML = data
+          .map(
+            (product, i) =>
+              `<div class="divcardgeneral">
+                  <p class="pre">Producto scrapeado n°:${i + 1}</p>
+                  <h2 class="letrab">${product.name}</h2>
+                  <p class="for">${product.sellerName}</p>
+                  <div class="divcardsecundary">
+                   <p class="price">${product.salePrice}</p>
+                   <div class="descuento">
+                   <p class="pricedes">${product.salePriceDes}</p>
+                   <p class="pricetag">${product.priceTag}</p>
+                   </div>
+                  </div>
+                 </div>`
+          )
+          .join("");
+        document.getElementById("downloadButton").style.display = "inline";
+        document.getElementById("downloadButton").onclick = () =>
+          downloadJSON(data);
+      }
+    }
+  );
+});
 ```
 
-:::tip My tip
-
-Use this awesome feature option
-
-:::
-
-:::danger Take care
-
-This action is dangerous
-
-:::
-
-## MDX and React Components
-
-[MDX](https://mdxjs.com/) can make your documentation more **interactive** and allows using any **React components inside Markdown**:
-
-```jsx
-export const Highlight = ({children, color}) => (
-  <span
-    style={{
-      backgroundColor: color,
-      borderRadius: '20px',
-      color: '#fff',
-      padding: '10px',
-      cursor: 'pointer',
-    }}
-    onClick={() => {
-      alert(`You clicked the color ${color} with label ${children}`)
-    }}>
-    {children}
-  </span>
-);
-
-This is <Highlight color="#25c2a0">Docusaurus green</Highlight> !
-
-This is <Highlight color="#1877F2">Facebook blue</Highlight> !
-```
-
-export const Highlight = ({children, color}) => (
-  <span
-    style={{
-      backgroundColor: color,
-      borderRadius: '20px',
-      color: '#fff',
-      padding: '10px',
-      cursor: 'pointer',
-    }}
-    onClick={() => {
-      alert(`You clicked the color ${color} with label ${children}`);
-    }}>
-    {children}
-  </span>
-);
-
-This is <Highlight color="#25c2a0">Docusaurus green</Highlight> !
-
-This is <Highlight color="#1877F2">Facebook blue</Highlight> !

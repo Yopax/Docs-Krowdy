@@ -28,6 +28,7 @@ const config: Config = {
     defaultLocale: 'en',
     locales: ['en'],
   },
+  
 
   presets: [
     [
@@ -134,5 +135,7 @@ const config: Config = {
     },
   } satisfies Preset.ThemeConfig,
 };
+
+
 
 export default config;
